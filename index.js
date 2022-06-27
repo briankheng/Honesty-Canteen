@@ -126,5 +126,8 @@ app.post("/delete", (req, res) => {
     }
   });
 });
+app.route("/balance-box").get((req, res) => {
+  res.render("balance");
+});
 
 app.listen(process.env.PORT || 3000);
