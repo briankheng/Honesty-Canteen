@@ -11,8 +11,14 @@ app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/storeDB");
 
-app.route("/").get((req, res) => {
-  res.render("store");
-});
+app
+  .route("/")
+  .get((req, res) => {
+    res.render("store");
+  })
+  .post((req, res) => {
+    console.log(req.body);
+    res.redirect("/");
+  });
 
 app.listen(process.env.PORT || 3000);
