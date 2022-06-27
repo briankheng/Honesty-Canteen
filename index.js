@@ -26,7 +26,12 @@ const itemSchema = new mongoose.Schema({
   },
 });
 
+const balanceSchema = new mongoose.Schema({
+  balance: Number,
+});
+
 const Item = mongoose.model("Item", itemSchema);
+const Balance = mongoose.model("Balance", balanceSchema);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -127,7 +132,17 @@ app.post("/delete", (req, res) => {
   });
 });
 app.route("/balance-box").get((req, res) => {
-  res.render("balance");
+  Balance.find((err, balances) => {
+    if (balances.length === 0) {
+      const balance = new Balance({
+        balance: 0,
+      });
+      balance.save();
+      res.redirect("/balance-box");
+    } else {
+      res.render("balance", { balance: balances[0].balance });
+    }
+  });
 });
 
 app.listen(process.env.PORT || 3000);

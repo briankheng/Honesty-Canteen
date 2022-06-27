@@ -75,7 +75,7 @@
     <header>
       <div class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container">
-          <a href="#" class="navbar-brand d-flex align-items-center">
+          <a href="/" class="navbar-brand d-flex align-items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -104,6 +104,31 @@
         </div>
       </div>
     </header>
+    <div class="px-4 py-5 my-5 text-center">
+      <img
+        class="d-block mx-auto mb-4"
+        src="img/sack-dollar-solid.svg"
+        alt=""
+        width="72"
+        height="57"
+      />
+      <h1 class="display-5 fw-bold">Rp<%= balance %></h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+          The canteen's balance box can be added by anyone (in Rupiah) with a
+          maximum amount of unlimited, also can be withdraw by anyone (in
+          Rupiah) with a maximum amount of the canteen's current balance
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <button type="button" class="btn btn-dark btn-lg px-4 gap-3">
+            Add
+          </button>
+          <button type="button" class="btn btn-outline-secondary btn-lg px-4">
+            Withdraw
+          </button>
+        </div>
+      </div>
+    </div>
     <footer class="text-muted py-5">
       <div class="container">
         <p class="float-end mb-1">
