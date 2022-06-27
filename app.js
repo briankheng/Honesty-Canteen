@@ -131,18 +131,53 @@ app.post("/delete", (req, res) => {
     }
   });
 });
-app.route("/balance-box").get((req, res) => {
-  Balance.find((err, balances) => {
-    if (balances.length === 0) {
-      const balance = new Balance({
-        balance: 0,
-      });
-      balance.save();
-      res.redirect("/balance-box");
-    } else {
-      res.render("balance", { balance: balances[0].balance });
-    }
+app
+  .route("/balance-box")
+  .get((req, res) => {
+    Balance.find((err, balances) => {
+      if (balances.length === 0) {
+        const balance = new Balance({
+          balance: 0,
+        });
+        balance.save();
+        res.redirect("/balance-box");
+      } else {
+        res.render("balance", { balance: balances[0].balance });
+      }
+    });
+  })
+  .post((req, res) => {
+    Balance.findOne((err, balance) => {
+      let befBalance = balance.balance;
+      let curBalance = balance.balance;
+      if (req.body.info === "add") {
+        curBalance += parseInt(req.body.add);
+        Balance.deleteOne({ balance: befBalance }, (err) => {
+          if (!err) {
+            const balance = new Balance({
+              balance: curBalance,
+            });
+            balance.save();
+            res.redirect("/balance-box");
+          }
+        });
+      } else if (req.body.info === "withdraw") {
+        if (parseInt(req.body.withdraw) <= befBalance) {
+          curBalance -= parseInt(req.body.withdraw);
+          Balance.deleteOne({ balance: befBalance }, (err) => {
+            if (!err) {
+              const balance = new Balance({
+                balance: curBalance,
+              });
+              balance.save();
+              res.redirect("/balance-box");
+            }
+          });
+        } else {
+          res.redirect("/balance-box");
+        }
+      }
+    });
   });
-});
 
 app.listen(process.env.PORT || 3000);
