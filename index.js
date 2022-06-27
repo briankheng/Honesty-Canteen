@@ -75,5 +75,11 @@ app
       }
     });
   });
-
+app.post("/delete", (req, res)=>{
+  Item.deleteOne({_id: req.body.deleteID}, (err)=>{
+    if(!err){
+      res.redirect("/");
+    }
+  })
+})
 app.listen(process.env.PORT || 3000);
