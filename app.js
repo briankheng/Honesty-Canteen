@@ -5,6 +5,9 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const _ = require("lodash");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const flash = require("connect-flash");
 
 const app = express();
 
@@ -12,6 +15,16 @@ app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(cookieParser("Secret"));
+app.use(
+  session({
+    secret: "Secret",
+    cookie: { maxAge: 60000 },
+    resave: true,
+    saveUninitialized: true
+  })
+);
+app.use(flash());
 
 mongoose.connect("mongodb://localhost:27017/storeDB");
 
@@ -142,7 +155,8 @@ app
         balance.save();
         res.redirect("/balance-box");
       } else {
-        res.render("balance", { balance: balances[0].balance });
+        const message = req.flash("message");
+        res.render("balance", { balance: balances[0].balance, message });
       }
     });
   })
@@ -158,6 +172,7 @@ app
               balance: curBalance,
             });
             balance.save();
+            req.flash("message", "Success");
             res.redirect("/balance-box");
           }
         });
@@ -170,10 +185,12 @@ app
                 balance: curBalance,
               });
               balance.save();
+              req.flash("message", "Success");
               res.redirect("/balance-box");
             }
           });
         } else {
+          req.flash("message", "Failed");
           res.redirect("/balance-box");
         }
       }
