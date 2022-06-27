@@ -42,42 +42,82 @@ const upload = multer({ storage: storage });
 app
   .route("/")
   .get((req, res) => {
-    Item.find((err, items) => {
-      items.forEach(item => {
-        item.name = _.startCase(item.name);
+    Item.find({})
+      .sort({ time: -1 })
+      .exec((err, items) => {
+        items.forEach((item) => {
+          item.name = _.startCase(item.name);
+        });
+        res.render("store", { items: items });
       });
-      res.render("store", { items: items });
-    });
   })
-  .post(upload.single("image"), (req, res, next) => {
-    const obj = {
-      name: _.toLower(req.body.productName),
-      desc: req.body.description,
-      price: req.body.price,
-      time: String(
-        new Date().toLocaleDateString("en-US", {
-          day: "numeric",
-          month: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-          second: "numeric",
-          hour12: false,
-        })
-      ),
-      img: {
-        data: fs.readFileSync(
-          path.join(__dirname + "/uploads/" + req.file.filename)
+  .post(upload.single("image"), (req, res) => {
+    if (req.body.filter === "new") {
+      Item.find({})
+        .sort({ time: -1 })
+        .exec((err, items) => {
+          items.forEach((item) => {
+            item.name = _.startCase(item.name);
+          });
+          res.render("store", { items: items });
+        });
+    } else if (req.body.filter === "old") {
+      Item.find({})
+        .sort({ time: 1 })
+        .exec((err, items) => {
+          items.forEach((item) => {
+            item.name = _.startCase(item.name);
+          });
+          res.render("store", { items: items });
+        });
+    } else if (req.body.filter === "ascName") {
+      Item.find({})
+        .sort({ name: 1 })
+        .exec((err, items) => {
+          items.forEach((item) => {
+            item.name = _.startCase(item.name);
+          });
+          res.render("store", { items: items });
+        });
+    } else if (req.body.filter === "dscName") {
+      Item.find({})
+        .sort({ name: -1 })
+        .exec((err, items) => {
+          items.forEach((item) => {
+            item.name = _.startCase(item.name);
+          });
+          res.render("store", { items: items });
+        });
+    } else {
+      const obj = {
+        name: _.toLower(req.body.productName),
+        desc: req.body.description,
+        price: req.body.price,
+        time: String(
+          new Date().toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: false,
+          })
         ),
-        contentType: "image/png",
-      },
-    };
-    Item.create(obj, (err, item) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.redirect("/");
-      }
-    });
+        img: {
+          data: fs.readFileSync(
+            path.join(__dirname + "/uploads/" + req.file.filename)
+          ),
+          contentType: "image/png",
+        },
+      };
+      Item.create(obj, (err, item) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/");
+        }
+      });
+    }
   });
 app.post("/delete", (req, res) => {
   Item.deleteOne({ _id: req.body.deleteID }, (err) => {
@@ -85,45 +125,6 @@ app.post("/delete", (req, res) => {
       res.redirect("/");
     }
   });
-});
-app.post("/filter", (req, res) => {
-  if (req.body.filter === "new") {
-    Item.find({})
-      .sort({ time: -1 })
-      .exec((err, items) => {
-        items.forEach(item => {
-          item.name = _.startCase(item.name);
-        });
-        res.render("store", { items: items });
-      });
-  } else if (req.body.filter === "old") {
-    Item.find({})
-      .sort({ time: 1 })
-      .exec((err, items) => {
-        items.forEach(item => {
-          item.name = _.startCase(item.name);
-        });
-        res.render("store", { items: items });
-      });
-  } else if (req.body.filter === "ascName") {
-    Item.find({})
-      .sort({ name: 1 })
-      .exec((err, items) => {
-        items.forEach(item => {
-          item.name = _.startCase(item.name);
-        });
-        res.render("store", { items: items });
-      });
-  } else if (req.body.filter === "dscName") {
-    Item.find({})
-      .sort({ name: -1 })
-      .exec((err, items) => {
-        items.forEach(item => {
-          item.name = _.startCase(item.name);
-        });
-        res.render("store", { items: items });
-      });
-  }
 });
 
 app.listen(process.env.PORT || 3000);
