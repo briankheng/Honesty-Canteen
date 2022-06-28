@@ -69,7 +69,7 @@
   </head>
   <body class="text-center">
     <main class="form-signin w-100 m-auto">
-      <form>
+      <form method="POST" action="/login">
         <img class="mb-4" src="img/white-blood-cell.png" alt="" width="90" />
         <h1 class="h3 mb-3 fw-normal">Please sign in!</h1>
 
@@ -92,15 +92,16 @@
           <label for="floatingPassword">Password</label>
         </div>
 
-        <button class="w-100 btn btn-lg btn-primary mt-3" type="submit">
+        <button class="w-100 btn btn-lg btn-primary mt-3 mb-2" type="submit">
           Login
         </button>
-        <div class="mt-2">
+        <div>
           <p class="mb-0">
             <strong>Don't have an account?</strong>
             <a href="/register" class="text-black-100 fw-bold">Register</a>
           </p>
         </div>
+        <p class="mt-5 mb-3 text-muted">&copy; Brian Kheng 2022.</p>
       </form>
     </main>
 

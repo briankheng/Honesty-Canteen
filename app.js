@@ -198,4 +198,6 @@ app
   });
 app.route("/login").get((req, res)=>res.render("login"));
 
+app.route("/register").get((req, res)=>res.render("register"));
+
 app.listen(process.env.PORT || 3000);
