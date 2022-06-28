@@ -130,58 +130,70 @@ app
           res.render("store", { items: items });
         });
     } else {
-      const obj = {
-        name: _.toLower(req.body.productName),
-        desc: req.body.description,
-        price: req.body.price,
-        time: String(
-          new Date().toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-            hour12: false,
-          })
-        ),
-        img: {
-          data: fs.readFileSync(
-            path.join(__dirname + "/uploads/" + req.file.filename)
+      if (req.isAuthenticated()) {
+        const obj = {
+          name: _.toLower(req.body.productName),
+          desc: req.body.description,
+          price: req.body.price,
+          time: String(
+            new Date().toLocaleDateString("en-US", {
+              day: "numeric",
+              month: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+              hour12: false,
+            })
           ),
-          contentType: "image/png",
-        },
-      };
-      Item.create(obj, (err, item) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.redirect("/");
-        }
-      });
+          img: {
+            data: fs.readFileSync(
+              path.join(__dirname + "/uploads/" + req.file.filename)
+            ),
+            contentType: "image/png",
+          },
+        };
+        Item.create(obj, (err, item) => {
+          if (err) {
+            console.log(err);
+          } else {
+            res.redirect("/");
+          }
+        });
+      } else {
+        res.redirect("/login");
+      }
     }
   });
 app.post("/delete", (req, res) => {
-  Item.deleteOne({ _id: req.body.deleteID }, (err) => {
-    if (!err) {
-      res.redirect("/");
-    }
-  });
+  if (req.isAuthenticated()) {
+    Item.deleteOne({ _id: req.body.deleteID }, (err) => {
+      if (!err) {
+        res.redirect("/");
+      }
+    });
+  } else {
+    res.redirect("/login");
+  }
 });
 app
   .route("/balance-box")
   .get((req, res) => {
-    Balance.find((err, balances) => {
-      if (balances.length === 0) {
-        const balance = new Balance({
-          balance: 0,
-        });
-        balance.save();
-        res.redirect("/balance-box");
-      } else {
-        const message = req.flash("message");
-        res.render("balance", { balance: balances[0].balance, message });
-      }
-    });
+    if (req.isAuthenticated()) {
+      Balance.find((err, balances) => {
+        if (balances.length === 0) {
+          const balance = new Balance({
+            balance: 0,
+          });
+          balance.save();
+          res.redirect("/balance-box");
+        } else {
+          const message = req.flash("message");
+          res.render("balance", { balance: balances[0].balance, message });
+        }
+      });
+    } else {
+      res.redirect("/login");
+    }
   })
   .post((req, res) => {
     Balance.findOne((err, balance) => {
