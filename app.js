@@ -10,6 +10,7 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
 const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
 
 const app = express();
 
@@ -23,10 +24,12 @@ app.use(
     secret: "Secret",
     cookie: { maxAge: 60000 },
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 );
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 mongoose.connect("mongodb://localhost:27017/storeDB");
 
@@ -45,8 +48,26 @@ const balanceSchema = new mongoose.Schema({
   balance: Number,
 });
 
+const userSchema = new mongoose.Schema({});
+userSchema.plugin(passportLocalMongoose);
+
 const Item = mongoose.model("Item", itemSchema);
 const Balance = mongoose.model("Balance", balanceSchema);
+const User = mongoose.model("User", userSchema);
+
+passport.use(User.createStrategy());
+
+passport.serializeUser(function (user, cb) {
+  process.nextTick(function () {
+    cb(null, { id: user.id, username: user.username });
+  });
+});
+
+passport.deserializeUser(function (user, cb) {
+  process.nextTick(function () {
+    return cb(null, user);
+  });
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -198,8 +219,38 @@ app
       }
     });
   });
-app.route("/login").get((req, res)=>res.render("login"));
+app
+  .route("/login")
+  .get((req, res) => res.render("login"))
+  .post((req, res) => {
+    const user = new User({
+      username: req.body.username,
+      password: req.body.password,
+    });
+    req.login(user, (err) => {
+      if (!err) {
+        passport.authenticate("local")(req, res, () => {
+          res.redirect("/");
+        });
+      }
+    });
+  });
 
-app.route("/register").get((req, res)=>res.render("register"));
+app
+  .route("/register")
+  .get((req, res) => res.render("register"))
+  .post((req, res) => {
+    User.register(
+      { username: req.body.username },
+      req.body.password,
+      (err, user) => {
+        if (!err) {
+          passport.authenticate("local")(req, res, () => {
+            res.redirect("/");
+          });
+        }
+      }
+    );
+  });
 
 app.listen(process.env.PORT || 3000);
