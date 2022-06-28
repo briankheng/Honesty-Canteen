@@ -11,7 +11,7 @@
       integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/styles.css" />
 
     <style>
       .bd-placeholder-img {
@@ -70,15 +70,21 @@
   <body class="text-center">
     <main class="form-signin w-100 m-auto">
       <form method="POST" action="/login">
-        <img class="mb-4" src="img/white-blood-cell.png" alt="" width="90" />
+        <img
+          class="mb-4"
+          src="img/white-blood-cell.png"
+          alt="logo"
+          width="90"
+        />
         <h1 class="h3 mb-3 fw-normal">Please sign in!</h1>
 
         <div class="form-floating">
           <input
-            type="email"
-            class="form-control"
+            type="number"
+            class="form-control rounded-0 rounded-top"
             id="floatingInput"
-            placeholder="name@example.com"
+            placeholder="Student's ID"
+            name="id"
           />
           <label for="floatingInput">Student's ID</label>
         </div>
@@ -88,6 +94,7 @@
             class="form-control"
             id="floatingPassword"
             placeholder="Password"
+            name="password"
           />
           <label for="floatingPassword">Password</label>
         </div>
