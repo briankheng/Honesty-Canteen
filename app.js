@@ -232,7 +232,10 @@ app
   });
 app
   .route("/login")
-  .get((req, res) => res.render("login"))
+  .get((req, res) => {
+    const message = req.flash("message");
+    res.render("login", { message });
+  })
   .post((req, res) => {
     const user = new User({
       username: req.body.username,
@@ -240,7 +243,10 @@ app
     });
     req.login(user, (err) => {
       if (!err) {
-        passport.authenticate("local")(req, res, () => {
+        passport.authenticate("local", {
+          failureRedirect: "/login",
+          failureFlash: req.flash("message", "Something went wrong!"),
+        })(req, res, () => {
           res.redirect("/");
         });
       }
