@@ -22,9 +22,8 @@ app.use(cookieParser("Secret"));
 app.use(
   session({
     secret: "Secret",
-    cookie: { maxAge: 60000 },
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
   })
 );
 app.use(flash());
@@ -250,19 +249,41 @@ app
 
 app
   .route("/register")
-  .get((req, res) => res.render("register"))
+  .get((req, res) => {
+    const message = req.flash("message");
+    res.render("register", { message });
+  })
   .post((req, res) => {
-    User.register(
-      { username: req.body.username },
-      req.body.password,
-      (err, user) => {
-        if (!err) {
-          passport.authenticate("local")(req, res, () => {
-            res.redirect("/");
-          });
-        }
+    const username = req.body.username;
+    let valid = true;
+    if (
+      username.length != 5 ||
+      parseInt(username[0]) + parseInt(username[1]) + parseInt(username[2]) !=
+        parseInt(username.substring(3, 5))
+    ) {
+      valid = false;
+    }
+    User.findOne({ username: username }, (err, user) => {
+      if (user != null) {
+        req.flash("message", "User Id already exist!");
+        res.redirect("/register");
+      } else if (!valid) {
+        req.flash("message", "User Id is not valid!");
+        res.redirect("/register");
+      } else {
+        User.register(
+          { username: req.body.username },
+          req.body.password,
+          (err, user) => {
+            if (!err) {
+              passport.authenticate("local")(req, res, () => {
+                res.redirect("/");
+              });
+            }
+          }
+        );
       }
-    );
+    });
   });
 
 app.listen(process.env.PORT || 3000);
