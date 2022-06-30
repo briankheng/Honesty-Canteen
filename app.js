@@ -30,7 +30,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(process.env.DATABASE_URL);
+mongoose.connect("mongodb+srv://admin:hjoF8iLTzoJAkJGp@cluster0.cf6pxwy.mongodb.net/storeDB");
 
 const itemSchema = new mongoose.Schema({
   name: String,
