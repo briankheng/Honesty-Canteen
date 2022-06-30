@@ -207,7 +207,10 @@ app
           res.redirect("/balance-box");
         } else {
           const message = req.flash("message");
-          res.render("balance", { balance: balances[0].balance.toLocaleString('en-US'), message });
+          res.render("balance", {
+            balance: balances[0].balance.toLocaleString("en-US"),
+            message,
+          });
         }
       });
     } else {
@@ -320,4 +323,11 @@ app.post("/logout", (req, res) => {
   });
 });
 
-app.listen(process.env.PORT);
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+app.listen(port, () => console.log("Server started on port 3000"));
+
+// https://hidden-anchorage-09762.herokuapp.com/
