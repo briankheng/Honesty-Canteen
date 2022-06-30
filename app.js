@@ -153,7 +153,7 @@ app
         const obj = {
           name: _.toLower(req.body.productName),
           desc: req.body.description,
-          price: parseInt(req.body.price).toLocaleString('en-US'),
+          price: parseInt(req.body.price).toLocaleString("en-US"),
           time: String(
             new Date().toLocaleDateString("en-US", {
               day: "numeric",
@@ -227,7 +227,7 @@ app
             });
             balance.save();
             req.flash("message", "Success");
-            res.redirect("/balance-box");
+            setTimeout(() => res.redirect("/balance-box"), 50);
           }
         });
       } else if (req.body.info === "withdraw") {
@@ -240,12 +240,12 @@ app
               });
               balance.save();
               req.flash("message", "Success");
-              res.redirect("/balance-box");
+              setTimeout(() => res.redirect("/balance-box"), 50);
             }
           });
         } else {
           req.flash("message", "Failed");
-          res.redirect("/balance-box");
+          setTimeout(() => res.redirect("/balance-box"), 50);
         }
       }
     });
