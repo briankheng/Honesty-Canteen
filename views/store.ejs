@@ -72,7 +72,7 @@
   </head>
   <body>
     <header>
-      <div class="navbar navbar-dark bg-dark shadow-sm">
+      <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
         <div class="container">
           <a href="/" class="navbar-brand d-flex align-items-center">
             <img
@@ -82,13 +82,49 @@
             />
             <strong>The Store</strong>
           </a>
-          <a href="/balance-box"
-            ><button class="btn btn-light" type="button">
-              <strong><i class="fas fa-sack-dollar"></i> Balance Box</strong>
-            </button></a
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
           >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="ms-auto">
+              <a href="/balance-box"
+                ><button class="btn btn-light" type="button">
+                  <strong
+                    ><i class="fas fa-sack-dollar"></i> Balance Box</strong
+                  >
+                </button></a
+              >
+              <% if (info == "logout") { %>
+              <form style="display: inline" action="/logout" method="POST">
+                <button class="btn btn-light" type="submit">
+                  <strong
+                    ><i class="fa-solid fa-arrow-right-from-bracket"></i> Log
+                    Out</strong
+                  >
+                </button>
+              </form>
+              <% } %> <% if (info == "login") { %>
+              <a href="/login">
+                <button class="btn btn-light" type="submit">
+                  <strong
+                    ><i class="fa-solid fa-arrow-right-to-bracket"></i> Log
+                    In</strong
+                  >
+                </button></a
+              >
+              <% } %>
+            </div>
+          </div>
         </div>
-      </div>
+      </nav>
     </header>
 
     <main>

@@ -88,7 +88,12 @@ app
         items.forEach((item) => {
           item.name = _.startCase(item.name);
         });
-        res.render("store", { items: items });
+        if(req.isAuthenticated()){
+          res.render("store", { items: items, info: "logout" });
+        }
+        else{
+          res.render("store", { items: items, info: "login" });
+        }
       });
   })
   .post(upload.single("image"), (req, res) => {
@@ -291,5 +296,13 @@ app
       }
     });
   });
+
+app.post("/logout", (req, res) => {
+  req.logout(function (err) {
+    if (!err) {
+      res.redirect("/");
+    }
+  });
+});
 
 app.listen(process.env.PORT || 3000);
