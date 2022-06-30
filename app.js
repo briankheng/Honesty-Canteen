@@ -30,7 +30,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://localhost:27017/storeDB");
+mongoose.connect(process.env.DATABASE_URL);
 
 const itemSchema = new mongoose.Schema({
   name: String,
@@ -153,7 +153,7 @@ app
         const obj = {
           name: _.toLower(req.body.productName),
           desc: req.body.description,
-          price: req.body.price,
+          price: parseInt(req.body.price).toLocaleString('en-US'),
           time: String(
             new Date().toLocaleDateString("en-US", {
               day: "numeric",
@@ -207,7 +207,7 @@ app
           res.redirect("/balance-box");
         } else {
           const message = req.flash("message");
-          res.render("balance", { balance: balances[0].balance, message });
+          res.render("balance", { balance: balances[0].balance.toLocaleString('en-US'), message });
         }
       });
     } else {
