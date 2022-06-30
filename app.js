@@ -88,10 +88,9 @@ app
         items.forEach((item) => {
           item.name = _.startCase(item.name);
         });
-        if(req.isAuthenticated()){
+        if (req.isAuthenticated()) {
           res.render("store", { items: items, info: "logout" });
-        }
-        else{
+        } else {
           res.render("store", { items: items, info: "login" });
         }
       });
@@ -104,7 +103,11 @@ app
           items.forEach((item) => {
             item.name = _.startCase(item.name);
           });
-          res.render("store", { items: items });
+          if (req.isAuthenticated()) {
+            res.render("store", { items: items, info: "logout" });
+          } else {
+            res.render("store", { items: items, info: "login" });
+          }
         });
     } else if (req.body.filter === "old") {
       Item.find({})
@@ -113,7 +116,11 @@ app
           items.forEach((item) => {
             item.name = _.startCase(item.name);
           });
-          res.render("store", { items: items });
+          if (req.isAuthenticated()) {
+            res.render("store", { items: items, info: "logout" });
+          } else {
+            res.render("store", { items: items, info: "login" });
+          }
         });
     } else if (req.body.filter === "ascName") {
       Item.find({})
@@ -122,7 +129,11 @@ app
           items.forEach((item) => {
             item.name = _.startCase(item.name);
           });
-          res.render("store", { items: items });
+          if (req.isAuthenticated()) {
+            res.render("store", { items: items, info: "logout" });
+          } else {
+            res.render("store", { items: items, info: "login" });
+          }
         });
     } else if (req.body.filter === "dscName") {
       Item.find({})
@@ -131,7 +142,11 @@ app
           items.forEach((item) => {
             item.name = _.startCase(item.name);
           });
-          res.render("store", { items: items });
+          if (req.isAuthenticated()) {
+            res.render("store", { items: items, info: "logout" });
+          } else {
+            res.render("store", { items: items, info: "login" });
+          }
         });
     } else {
       if (req.isAuthenticated()) {
