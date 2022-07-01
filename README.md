@@ -39,4 +39,4 @@ go get a local copy up and running then follow these simple steps.<br>
 * [Mongodb](https://www.mongodb.com/)
 ## Contact
 Brian Kheng - briankheng63@gmail.com <br>
-Project Link: https://github.com/briankheng/Kantin-Kejujuran
+Project Link: https://github.com/briankheng/Honesty-Canteen
